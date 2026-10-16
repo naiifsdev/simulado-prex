@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulado de Banca — PREX Zella</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+background:#F3E5CE;color:#2b2b2b;line-height:1.5;padding:18px}
+.wrap{max-width:780px;margin:0 auto}
+header{background:#661C33;color:#fff;border-radius:14px;padding:22px 24px;margin-bottom:16px}
+header h1{font-size:21px;letter-spacing:.2px;margin-bottom:4px}
+header p{font-size:13px;opacity:.85}
+.bar{background:#fff;border-radius:12px;padding:12px 16px;margin-bottom:14px;
+display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.bar .item{font-size:13px}
+.bar .item b{color:#661C33;font-size:16px}
+.track{flex:1;min-width:120px;height:7px;background:#e7ded0;border-radius:4px;overflow:hidden}
+.fill{height:100%;background:#661C33;width:0;transition:width .3s}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.tag{display:inline-block;background:#DBC99F;color:#4F3429;font-size:11px;font-weight:700;
+letter-spacing:.6px;text-transform:uppercase;padding:4px 10px;border-radius:20px;margin-bottom:12px}
+.q{font-size:17px;font-weight:600;margin-bottom:16px;color:#4F3429}
+.opt{display:block;width:100%;text-align:left;background:#faf7f1;border:2px solid #ece3d5;
+border-radius:10px;padding:13px 15px;margin-bottom:9px;font-size:14.5px;cursor:pointer;
+transition:all .15s;font-family:inherit;color:#2b2b2b}
+.opt:hover:not(:disabled){border-color:#661C33;background:#fff}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:#1B5E20;background:#eaf5ea}
+.opt.no{border-color:#B3261E;background:#fdeceb}
+.opt .mk{font-weight:700;margin-right:8px}
+.fb{margin-top:16px;border-radius:10px;padding:16px;font-size:14px;display:none}
+.fb.show{display:block}
+.fb.good{background:#eaf5ea;border-left:4px solid #1B5E20}
+.fb.bad{background:#fdeceb;border-left:4px solid #B3261E}
+.fb h4{font-size:14px;margin-bottom:7px}
+.fb .lbl{font-weight:700;color:#661C33;display:block;margin:11px 0 3px}
+.nav{margin-top:20px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+button.go{background:#661C33;color:#fff;border:0;border-radius:9px;padding:12px 24px;
+font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit}
+button.go:disabled{opacity:.3;cursor:not-allowed}
+button.ghost{background:transparent;color:#661C33;border:2px solid #661C33}
+button.link{background:none;border:0;color:#8a7a68;font-size:13px;cursor:pointer;
+font-family:inherit;text-decoration:underline;padding:6px}
+button.link:hover{color:#661C33}
+.res{text-align:center;padding:14px 0}
+.score{font-size:52px;font-weight:700;color:#661C33;line-height:1}
+.score span{font-size:22px;color:#8a7a68}
+.diag{margin:16px auto;max-width:560px;font-size:15px}
+.blocos{margin-top:22px;text-align:left}
+.brow{display:flex;justify-content:space-between;padding:9px 12px;border-radius:8px;
+background:#faf7f1;margin-bottom:6px;font-size:14px}
+.brow b{font-variant-numeric:tabular-nums}
+.rev{margin-top:22px;text-align:left}
+.rev h3{font-size:15px;color:#661C33;margin-bottom:10px}
+.rv{background:#fdeceb;border-left:3px solid #B3261E;border-radius:8px;padding:12px 14px;
+margin-bottom:9px;font-size:13.5px}
+.rv .qq{font-weight:600;margin-bottom:5px}
+.pend{background:#fff7e6;border-left:3px solid #B35C00;border-radius:8px;padding:12px 14px;
+font-size:13.5px;margin-top:14px;text-align:left}
+footer{text-align:center;font-size:12px;color:#8a7a68;margin-top:18px}
+@media(max-width:520px){.nav{flex-wrap:wrap}button.go{flex:1}}
+</style></head><body>
+<div class="wrap">
+<header>
+  <h1>Simulado de Banca — PREX Zella</h1>
+  <p>29 perguntas sobre o PREX final e a apresentação executiva · Grupo One Seven</p>
+</header>
+
+<div class="bar" id="bar">
+  <div class="item">Questão <b id="n">1</b> de 29</div>
+  <div class="item">Acertos <b id="acc">0</b></div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+</div>
+
+<div class="card" id="card"></div>
+<footer>Responda sem consultar. O objetivo é descobrir onde você trava, não acertar tudo de primeira.</footer>
+</div>
+
+<script>
+const Q = [{"bloco": "Pesquisa e método", "p": "A banca pergunta: “Qual foi o tamanho e o critério da sua amostra?”", "o": ["278 respondentes, todos considerados válidos", "200 respondentes válidos, filtrados de 278 abordados pela pergunta sobre redução de açúcar", "200 respondentes escolhidos aleatoriamente em Alphaville", "50 respondentes, os mesmos da pesquisa VALS"], "c": 1, "e": "Foram 278 abordados e 200 válidos. A primeira pergunta funcionou como filtro: 72% declararam evitar ou reduzir açúcar e seguiram no questionário. Quem respondeu que não, saiu da amostra.", "f": "A amostra válida é de 200 respondentes. Abordamos 278 pessoas e a primeira pergunta funcionou como filtro de perfil: 72% declararam reduzir ou evitar o consumo de açúcar e seguiram para o questionário completo."}, {"bloco": "Pesquisa e método", "p": "“Vocês dizem que o mercado não é só de diabético. O que sustenta isso?”", "o": ["A opinião do nutricionista entrevistado", "As motivações declaradas: 49% buscam estilo de vida saudável e 37% controle alimentar", "O fato de 95% já terem experimentado produtos zero açúcar", "A análise da concorrência"], "c": 1, "e": "O dado que sustenta a tese é a motivação declarada: estilo de vida saudável (49%) e controle alimentar (37%) somam 86%, contra uma minoria com restrição médica. Os 95% de experimentação mostram familiaridade com a categoria, não motivação.", "f": "A motivação declarada na pesquisa. Metade do público, 49%, busca um estilo de vida mais saudável e 37% querem controlar melhor a alimentação. A restrição médica aparece como minoria. Isso amplia o mercado para além do público clínico."}, {"bloco": "Pesquisa e método", "p": "“Qual é a maior barreira de consumo que a sua pesquisa identificou?”", "o": ["O preço elevado dos produtos zero açúcar", "A falta de sabor, citada por 37%, seguida do uso de adoçantes artificiais, com 28%", "A dificuldade de encontrar lojas especializadas", "O desconhecimento da marca"], "c": 1, "e": "Falta de sabor (37%) e adoçantes artificiais (28%) foram as duas maiores desconfianças. Preço apareceu com 9% e desconhecimento da marca com 6%. Por isso a comunicação ataca sabor e transparência de ingredientes, não preço.", "f": "A falta de sabor, citada por 37%, e o uso de adoçantes artificiais, com 28%. Preço ficou em 9%. Foi por isso que o eixo da nossa comunicação é prazer sensorial e transparência de ingredientes, e não desconto."}, {"bloco": "Pesquisa e método", "p": "“Por que vocês descartaram rádio e televisão no plano de mídia?”", "o": ["Porque a maioria do público não consome esses meios", "Por custo incompatível com a verba e por não permitirem recorte geográfico do microterritório de Alphaville", "Porque a pesquisa não mediu hábitos de mídia tradicional", "Porque o público é exclusivamente digital"], "c": 1, "e": "Cuidado com a armadilha: 56% assistem TV em algum formato e 30% ouvem rádio — então “a maioria não consome” é falso e a banca pode derrubar. O argumento correto é econômico e técnico: custo e impossibilidade de segmentar o raio de atuação. Para impressos, aí sim o dado é forte: 81% não leem revistas e 56% não leem jornal.", "f": "Por duas razões práticas: o custo de veiculação é incompatível com a verba e nenhum dos dois permite recorte geográfico do nosso microterritório, o que geraria cobertura desperdiçada. Nos impressos o dado é ainda mais direto: 81% não leem revistas e 56% não leem jornal."}, {"bloco": "Pesquisa e método", "p": "“O Critério Brasil mostrou público majoritariamente C2 e D/E. Isso não contradiz um posicionamento premium?”", "o": ["Sim, é uma inconsistência do trabalho", "Não, porque o Critério Brasil mede a amostra pesquisada, enquanto o público-alvo é o recorte B2/C1 e as classes A/B da praça de Alphaville", "Não, porque o Critério Brasil não se aplica a confeitarias", "Sim, mas foi compensado pela pesquisa VALS"], "c": 1, "e": "A distribuição da amostra (B2 14,5%, C1 11,5%, C2 30,5%, D/E 43,5%) descreve quem respondeu, não quem a marca vai atender. O público-alvo é o estrato de maior renda da praça, atingido por segmentação geográfica e comportamental. Reconhecer a limitação da amostra é mais forte do que negá-la.", "f": "O Critério Brasil descreve a amostra que respondeu, não o público que vamos atender. Nossa praça é Alphaville, com concentração de classes A e B, e a mídia é segmentada geograficamente para alcançar justamente esse recorte. É uma limitação da amostra que reconhecemos no trabalho."}, {"bloco": "Pesquisa e método", "p": "“O que a pesquisa VALS acrescentou ao trabalho?”", "o": ["A definição do ticket médio", "O perfil psicográfico: Racionais (3,07), Inovadores (3,03) e Experimentadores (2,95) como médias dominantes", "A escolha dos canais de mídia", "O cálculo do TAM e do SAM"], "c": 1, "e": "A VALS trouxe a segmentação psicográfica, aplicada a 50 mulheres de 18 a 24 anos. Os perfis dominantes — Racionais, Inovadores e Experimentadores — indicam público que valoriza qualidade técnica, novidade e estética, o que sustenta o posicionamento premium.", "f": "A VALS trouxe o perfil psicográfico. Os perfis dominantes foram Racionais, com média 3,07, Inovadores com 3,03 e Experimentadores com 2,95. São públicos que valorizam qualidade técnica, inovação e estética, o que sustenta o nosso posicionamento premium."}, {"bloco": "Estratégia e análise", "p": "“Qual é a força competitiva mais intensa no seu setor, segundo Porter?”", "o": ["Ameaça de novos entrantes", "Rivalidade entre concorrentes, classificada como Alta, 4 de 5", "Poder de barganha dos fornecedores", "Ameaça de produtos substitutos"], "c": 1, "e": "A rivalidade recebeu 4/5 por causa dos concorrentes diretos no mesmo polo (Nati Mazzoni e Sweet and Fit), das marcas regionais premium (Isabela Akkari no Shopping Tamboré e A Dora Adora via delivery) e da expansão de confeiteiros home-based pelo iFood. Substitutos ficaram em 3/5.", "f": "A rivalidade entre concorrentes, que classificamos como Alta, 4 de 5. Temos dois concorrentes diretos no mesmo polo comercial, Nati Mazzoni e Sweet and Fit, marcas regionais premium como Isabela Akkari no Tamboré e A Dora Adora no delivery, além da expansão de confeiteiros autônomos pelas redes."}, {"bloco": "Estratégia e análise", "p": "“Onde a Zella se posiciona na Matriz GE e o que isso significa?”", "o": ["Zona B, manter e acompanhar seletivamente", "Zona A, Investir e Crescer, com Atratividade de Mercado 4,20 e Força do Negócio 3,70", "Zona C, colher ou desinvestir", "A Matriz GE não foi aplicada"], "c": 1, "e": "Atratividade de Mercado 4,20 e Força do Negócio 3,70 colocam a Zella na zona A da Matriz GE, de investir e crescer: altas oportunidades externas combinadas com competências internas fortes.", "f": "Na zona A da Matriz GE, de Investir e Crescer. A Atratividade de Mercado ficou em 4,20 e a Força do Negócio em 3,70, o que indica oportunidades externas altas combinadas com competências internas sólidas."}, {"bloco": "Estratégia e análise", "p": "“Qual é o ponto fraco mais crítico da Zella e como vocês tratam isso?”", "o": ["O preço elevado, tratado com promoções", "Ser marca nova e sem reconhecimento, MIR −9, tratada com awareness, degustação e prova social no primeiro ano", "A dependência de fornecedores, tratada com estoque alto", "A falta de capital, tratada com empréstimo"], "c": 1, "e": "Marca nova sem reputação recebeu MIR −9, o grau máximo de criticidade. A resposta está no plano: concentrar o primeiro ano em reconhecimento, experimentação assistida, avaliações digitais e parcerias locais — exatamente o que os objetivos de comunicação medem.", "f": "Ser uma marca nova, sem reputação e sem base de clientes. Recebeu MIR menos nove, o grau máximo de criticidade. A resposta está no plano de comunicação: o primeiro ano é concentrado em reconhecimento, degustação, prova social e parcerias locais."}, {"bloco": "Estratégia e análise", "p": "“Quem são os concorrentes diretos e por que a Isabela Akkari não é igual a vocês?”", "o": ["Sodiê e Carlo's Bakery; a diferença é o preço", "Nati Mazzoni e Sweet and Fit no polo local; a Isabela Akkari é confeitaria saudável de proposta ampla e usa açúcar de coco ou demerara em parte das receitas", "Kopenhagen e Cacau Show; a diferença é o público", "Não existem concorrentes diretos em Alphaville"], "c": 1, "e": "Diretos locais: Nati Mazzoni e Sweet and Fit. Regionais: Isabela Akkari e A Dora Adora. Indiretos: Sodiê, Carlo's Bakery e Kopenhagen. A diferenciação frente à Isabela Akkari é o recorte: ela é confeitaria saudável ampla, com adoçante próprio Nanéa mas também açúcar de coco e demerara em parte do portfólio; a Zella é integralmente sem adição de açúcar.", "f": "Diretos no mesmo polo são Nati Mazzoni e Sweet and Fit. A Isabela Akkari é nossa principal referência regional, mas a proposta dela é confeitaria saudável ampla: parte das receitas leva açúcar de coco ou demerara. A Zella concentra a identidade inteira em sem adição de açúcar, o que é um recorte mais estreito e mais claro."}, {"bloco": "Estratégia e análise", "p": "“Qual é a missão da Zella?”", "o": ["Ser a maior confeitaria zero açúcar do Brasil", "Proporcionar experiências de confeitaria sem adição de açúcar, unindo sabor, qualidade e transparência para quem busca escolhas alimentares mais equilibradas", "Vender doces saudáveis com o melhor preço da região", "Democratizar o acesso à alimentação saudável"], "c": 1, "e": "Essa é a missão registrada no capítulo 2. Cuidado para não trocar missão por visão: a visão é tornar-se referência em confeitaria sem adição de açúcar na região de Alphaville, com expansão futura planejada.", "f": "Proporcionar experiências de confeitaria sem adição de açúcar, unindo sabor, qualidade e transparência, para consumidores que buscam escolhas alimentares mais equilibradas."}, {"bloco": "Marketing e comercial", "p": "“Seu ticket médio é R$ 58, mas quase metade da amostra gasta entre R$ 16 e R$ 30. Explique.”", "o": ["O ticket foi estimado com base nos concorrentes", "R$ 58 vem do recorte dos 87 respondentes (43,5%) dispostos a investir a partir de R$ 31; para a projeção financeira usamos o ticket ponderado por canal, de R$ 104,76", "O ticket é a média simples de todas as faixas da pesquisa", "O ticket foi definido pela margem de 55% exigida"], "c": 1, "e": "Essa é a pergunta mais provável do bloco financeiro. O R$ 58 é um recorte deliberado do público com maior disposição de pagamento, coerente com o posicionamento premium. E a projeção não usa R$ 58: usa R$ 104,76, ponderado pelos três canais, porque encomendas têm ticket de R$ 225.", "f": "O R$ 58 não é a média da amostra inteira. É a média ponderada do recorte de 87 respondentes, 43,5% da amostra, que declararam disposição de investir a partir de R$ 31. Esse é o público aderente ao nosso posicionamento. E para a projeção financeira usamos o ticket ponderado por canal, de R$ 104,76, porque encomendas têm ticket de R$ 225."}, {"bloco": "Marketing e comercial", "p": "“79% preferem comprar presencialmente, mas a loja física é só 40% do volume. Isso não é contraditório?”", "o": ["Sim, é um erro de consistência do trabalho", "Não: 79% é preferência declarada de canal e 40% é participação no volume; encomendas têm ticket quatro vezes maior e respondem por cerca de 60% da receita", "Não, porque o dado de 79% foi descartado", "Sim, mas o professor não vai perceber"], "c": 1, "e": "São métricas diferentes: preferência declarada não é composição de receita. Loja 40%, delivery 32% e encomendas 28% do volume; como a encomenda tem ticket de R$ 225 contra R$ 58 dos outros canais, ela concentra cerca de 60% da receita. A loja continua sendo o centro da experiência e o destino da mídia geolocalizada.", "f": "São duas métricas diferentes. Os 79% são preferência declarada de canal de compra. Os 40% são participação no volume de vendas. Como a encomenda tem ticket de R$ 225 contra R$ 58 da loja e do delivery, ela concentra cerca de 60% da receita com apenas 28% do volume. A loja física segue sendo o centro da experiência e o destino da nossa mídia geolocalizada."}, {"bloco": "Marketing e comercial", "p": "“Como vocês chegaram ao TAM, SAM e SOM?”", "o": ["Por estimativa de mercado do setor de foodservice", "TAM: 245 mil pessoas da área de influência × 50% que buscam reduzir açúcar = 122.500. SAM: recorte de maior renda = 47.775. SOM: R$ 4.486.598,42 de receita projetada no ano 1", "Pelo número de concorrentes da região", "Pelo número de respondentes da pesquisa"], "c": 1, "e": "O TAM parte de 65 mil moradores mais 180 mil de fluxo diário, totalizando 245 mil pessoas, aplicando o indicador de 50% que buscam reduzir açúcar. O SAM aplica o recorte de renda. O SOM é a receita que a capacidade operacional permite atingir no primeiro ano.", "f": "O TAM parte da área de influência de Alphaville, 65 mil moradores mais 180 mil de fluxo diário, num universo de 245 mil pessoas, com o indicador de 50% que buscam reduzir açúcar, chegando a 122.500 consumidores. O SAM aplica o recorte de maior renda, 47.775. E o SOM é a receita que nossa capacidade operacional sustenta no primeiro ano, R$ 4,49 milhões."}, {"bloco": "Marketing e comercial", "p": "“Qual é a estratégia de preço da Zella?”", "o": ["Entrar cobrando abaixo do concorrente para ganhar mercado", "Preço baseado em valor percebido, alinhado ao segmento premium, sem competir por menor preço e evitando promoções que banalizem a proposta", "Preço médio de mercado, acompanhando a concorrência", "Preço por margem fixa de 55% sobre o custo"], "c": 1, "e": "O plano é explícito: a Zella não compete por menor preço, porque a proposta de valor está na especialização, qualidade, atendimento e experiência. A orientação é comunicar valor antes de preço e usar ofertas só para a primeira experimentação.", "f": "Preço baseado em valor percebido e coerente com o posicionamento premium. Não competimos por menor preço, porque nossa proposta está na especialização, na qualidade dos ingredientes e na experiência. Promoções agressivas ficariam em contradição com o posicionamento."}, {"bloco": "Marketing e comercial", "p": "“Quanto é a verba de marketing e qual a lógica da distribuição?”", "o": ["R$ 95 mil, concentrados em redes sociais", "R$ 298 mil no ano 1, equivalente a 6,64% da receita bruta projetada, com R$ 45 mil de lançamento e R$ 253 mil de operação", "R$ 450 mil, todos em campanha de lançamento", "10% da receita, sem detalhamento por rubrica"], "c": 1, "e": "A verba é de R$ 298 mil, 6,64% da receita bruta do ano 1. As maiores rubricas são site e CRM (R$ 72 mil), influenciadores (R$ 66 mil), Google e Meta Ads (R$ 62 mil), OOH regional (R$ 49 mil), lançamento (R$ 45 mil) e impressos (R$ 4 mil).", "f": "São R$ 298 mil no primeiro ano, o equivalente a 6,64% da receita bruta projetada. Desses, R$ 45 mil vão para o lançamento e R$ 253 mil para a operação ao longo do ano, distribuídos entre site e CRM, influenciadores, Google e Meta Ads, OOH regional e impressos."}, {"bloco": "Marketing e comercial", "p": "“Como o plano de marketing conversa com a SWOT?”", "o": ["A SWOT é um capítulo independente do plano", "Cada força vira argumento de diferenciação e cada fraqueza recebe uma resposta mercadológica específica, em dois quadros do capítulo 13", "A SWOT só alimenta o plano financeiro", "A SWOT define apenas o posicionamento"], "c": 1, "e": "O capítulo 13 traz dois quadros: um ligando cada força a um desdobramento de marketing e outro ligando cada fraqueza a uma resposta. Exemplo: capacidade produtiva limitada responde com pré-venda e encomenda programada, para não gerar demanda acima do que a operação entrega.", "f": "Diretamente. O capítulo 13 traz dois quadros: um que transforma cada força em desdobramento de comunicação e outro que dá a cada fraqueza uma resposta mercadológica. Por exemplo, a capacidade produtiva limitada é tratada com pré-venda e encomenda programada, para não criar demanda acima do que conseguimos entregar."}, {"bloco": "Comunicação e mídia", "p": "“Qual a diferença entre os seus objetivos de comunicação e os de mídia?”", "o": ["São sinônimos, mudam só o nome do capítulo", "Comunicação define o que o público deve saber, sentir e fazer; mídia define quem atingir, onde, com que frequência e por quanto tempo", "Comunicação trata de redes sociais e mídia trata de TV e rádio", "Comunicação é qualitativa e mídia é quantitativa"], "c": 1, "e": "Essa é a distinção que abre o seu capítulo. Objetivos de comunicação são de natureza perceptual e comportamental, organizados nos níveis cognitivo, afetivo e conativo. Objetivos de mídia são as condições de entrega: alcance, frequência, cobertura, período e continuidade.", "f": "Os objetivos de comunicação dizem o que queremos que o público passe a saber, sentir e fazer em relação à marca. Os objetivos de mídia dizem quem vamos atingir, em que praça, com que frequência e em que período. Um é o efeito pretendido, o outro é a condição de entrega."}, {"bloco": "Comunicação e mídia", "p": "“Por que os objetivos estão organizados em cognitivo, afetivo e conativo?”", "o": ["Porque é a estrutura exigida pelo regulamento do PREX", "Porque correspondem aos três níveis de resposta do consumidor à mensagem, permitindo medir conhecimento, percepção e ação separadamente", "Porque facilita a divisão de tarefas entre os integrantes", "Porque o professor pediu em aula"], "c": 1, "e": "Os três níveis permitem que cada objetivo seja medido de forma independente nos Controles de Marketing: conhecer (recall), sentir (percepção e nota de avaliação) e agir (experimentação, avaliações, recompra).", "f": "Porque são os três níveis de resposta do consumidor à mensagem. Separar conhecer, sentir e agir permite medir cada um de forma independente na tabela de controle, em vez de ter um objetivo genérico que ninguém consegue verificar depois."}, {"bloco": "Comunicação e mídia", "p": "“De onde vem a meta de 40% de reconhecimento assistido?”", "o": ["É um dado da pesquisa quantitativa", "É uma meta de plano definida pelo grupo, a ser aferida por pesquisa no ponto de venda e nos canais digitais ao final do primeiro ano", "É a média do setor de confeitaria", "Foi calculada a partir do TAM"], "c": 1, "e": "Honestidade aqui é mais forte do que inventar fonte. Meta de plano é uma decisão do grupo, não um dado observado — o que a pesquisa dá é o ponto de partida (marca inexistente, MIR −9) e o instrumento de aferição. Se a banca perguntar “por que 40% e não 60%?”, a resposta é a combinação de verba, praça restrita e primeiro ano de operação.", "f": "É uma meta de plano, definida por nós, não um dado da pesquisa. O ponto de partida é uma marca que ainda não existe, classificada com MIR menos nove. Os 40% consideram a verba disponível, uma praça geograficamente restrita e um primeiro ano de operação, e serão aferidos por pesquisa no ponto de venda e nos canais digitais."}, {"bloco": "Comunicação e mídia", "p": "“Por que Instagram e TikTok concentram a mídia paga?”", "o": ["Porque são as redes mais usadas pelos jovens em geral", "Porque a pesquisa mostrou que 61% descobrem marcas de alimentos pelo Instagram e 52% dizem que ele influencia a experimentação, com TikTok em 17% e 22%", "Porque têm o menor custo por clique do mercado", "Porque os concorrentes também estão lá"], "c": 1, "e": "A escolha vem do dado próprio, não de senso comum. Instagram lidera descoberta (61%) e influência sobre experimentação (52%); TikTok aparece com 17% e 22%. O formato segue a mesma lógica: vídeo curto é o conteúdo que mais chama atenção para compra, com 42%.", "f": "Pela nossa própria pesquisa. O Instagram é o principal canal de descoberta de novas marcas de alimentos, com 61%, e o que mais influencia a decisão de experimentar, com 52%. O TikTok aparece com 17% na descoberta e 22% na influência. E o formato prioritário é vídeo curto, que foi apontado por 42% como o conteúdo que mais chama atenção para comprar confeitaria."}, {"bloco": "Comunicação e mídia", "p": "“Qual frequência de exposição vocês definiram e por quê?”", "o": ["Duas exposições mensais, suficientes para marca nova", "Mínimo de 4 exposições mensais por indivíduo na rotina e 8 nos períodos de pico sazonal", "Uma exposição por semana durante todo o ano", "Não definimos frequência, só alcance"], "c": 1, "e": "Quatro exposições nos meses de manutenção e oito nos quatro picos (Páscoa, Dia das Mães, Dia dos Namorados e fim de ano). O racional é que marca sem reconhecimento prévio precisa de repetição para fixar, e os picos coincidem com a demanda de presenteáveis.", "f": "Mínimo de quatro exposições mensais por indivíduo impactado nos períodos de rotina e oito nos ciclos sazonais de pico. Marca em introdução precisa de repetição para fixar na memória, e os picos coincidem com as datas de maior consumo de presenteáveis."}, {"bloco": "Comunicação e mídia", "p": "“Qual é o tom de voz da marca e como ele evita o discurso de privação?”", "o": ["Técnico e informativo, focado em tabela nutricional", "Sofisticado, acolhedor, transparente e sensorial, comunicando a ausência de açúcar como parte natural da proposta e não como limitação", "Jovem e descontraído, com linguagem de redes sociais", "Formal e institucional"], "c": 1, "e": "O tom é sofisticado, acolhedor, transparente e sensorial. A regra é falar de desejo e experiência, não de restrição — coerente com a barreira identificada na pesquisa, em que 37% desconfiam do sabor. Os cinco pilares são Desejo e Gastronomia, Educação e Transparência, Experiência Zella, Prova Social e Lifestyle.", "f": "Sofisticado, acolhedor, transparente e sensorial. A ausência de açúcar é comunicada como parte natural da proposta, nunca como limitação, porque a maior barreira que a pesquisa identificou é justamente a desconfiança em relação ao sabor. O foco está no desejo e na experiência, não na privação."}, {"bloco": "Financeiro", "p": "“Quais são os indicadores de viabilidade do projeto?”", "o": ["TIR de 20%, VPL de R$ 95 mil e payback de 5 anos", "TIR de 40,73% contra TMA de 20%, VPL de R$ 712.420,88 e payback de 2 anos, 7 meses e 18 dias", "TIR de 13,9% e VPL negativo no primeiro ano", "O projeto não apresenta payback dentro de 5 anos"], "c": 1, "e": "TIR 40,73% acima da TMA de 20%, VPL positivo de R$ 712.420,88 e payback entre o segundo e o terceiro ano. Decore esses três números: é a pergunta mais previsível do bloco.", "f": "A TIR projetada é de 40,73% ao ano, acima da Taxa Mínima de Atratividade de 20%. O VPL é positivo em R$ 712.420,88 e o payback ocorre em 2 anos, 7 meses e 18 dias."}, {"bloco": "Financeiro", "p": "“Como o ano 1 fecha com prejuízo de R$ 91,4 mil e geração de caixa positiva de R$ 88,7 mil ao mesmo tempo?”", "o": ["Por erro de preenchimento da planilha", "Porque a depreciação e a amortização são despesas contábeis que reduzem o resultado, mas não representam saída de caixa", "Porque o aporte dos sócios entrou como receita", "Porque o prejuízo foi transferido para o ano 2"], "c": 1, "e": "Clássico de banca. O resultado contábil é negativo, mas a depreciação e a amortização são somadas de volta no fluxo de caixa porque não saem do caixa. Por isso o caixa fecha positivo mesmo com prejuízo contábil.", "f": "Porque a depreciação e a amortização entram como despesa no resultado contábil, mas não são desembolso. No fluxo de caixa elas voltam a ser somadas. Por isso o ano 1 fecha com resultado contábil negativo e geração de caixa positiva."}, {"bloco": "Financeiro", "p": "“O ponto de equilíbrio é 79,70% ou 105,1%? Os dois números aparecem.”", "o": ["Houve erro: só 79,70% está correto", "105,1% é o ponto de equilíbrio do ano 1 e 79,70% é a média dos cinco anos; por isso o ano 1 fecha no vermelho contábil", "105,1% é da apresentação e 79,70% do documento, são versões diferentes", "O ponto de equilíbrio não foi calculado"], "c": 1, "e": "Os dois números são verdadeiros e se referem a períodos distintos. Um PE de 105,1% no ano 1 significa que seria necessário vender acima do projetado para empatar — coerente com o prejuízo contábil daquele ano. A média de 79,70% nos cinco anos mostra margem de segurança de cerca de 20%.", "f": "São períodos diferentes. No ano 1 o ponto de equilíbrio é de 105,1% das vendas projetadas, o que explica o resultado contábil negativo nesse primeiro ano. A média dos cinco anos é de 79,70%, o que representa uma margem de segurança de cerca de 20% a partir da maturação da operação."}, {"bloco": "Financeiro", "p": "“Qual é o investimento inicial e como ele se divide?”", "o": ["R$ 1,44 milhão, sendo R$ 620 mil em obras", "R$ 931 mil, sendo R$ 746.445 de implantação e R$ 184.555 de caixa inicial", "R$ 360 mil de aporte dos sócios", "R$ 400 mil, só em obras e ambientação"], "c": 1, "e": "São R$ 931 mil no total. Dentro da implantação, as maiores linhas são obras e ambientação (R$ 400 mil), equipamentos e mobiliário (R$ 170.080), gastos pré-operacionais (R$ 131.365) e marketing de lançamento (R$ 45 mil).", "f": "O investimento total é de R$ 931 mil: R$ 746.445 de implantação e R$ 184.555 de caixa inicial. As maiores linhas são obras e ambientação, com R$ 400 mil, equipamentos e mobiliário com R$ 170 mil e gastos pré-operacionais com R$ 131 mil."}, {"bloco": "Financeiro", "p": "“Quais são as premissas mais sensíveis da sua projeção?”", "o": ["O número de respondentes da pesquisa", "O crescimento de 13,9% ao ano e a manutenção dos gastos fixos constantes ao longo dos cinco anos", "A taxa de comissão do iFood", "O preço do aluguel em Alphaville"], "c": 1, "e": "A própria apresentação declara as duas premissas sensíveis: crescimento anual de 13,9% e gastos fixos constantes. Assumir isso antes de a banca apontar demonstra domínio e honestidade metodológica.", "f": "Duas: o crescimento de 13,9% ao ano na receita e a manutenção dos gastos fixos constantes ao longo do horizonte. São as premissas que, se mudarem, alteram mais a viabilidade, e por isso estão declaradas na apresentação."}, {"bloco": "Financeiro", "p": "“Qual canal sustenta a receita e que risco isso traz?”", "o": ["A loja física, com risco de sazonalidade", "As encomendas, com cerca de 60% da receita e apenas 28% do volume; o risco é a concentração em um canal de ticket alto e demanda sazonal", "O delivery, com risco de dependência do iFood", "O buffet corporativo, com risco de inadimplência"], "c": 1, "e": "Reconhecer o risco é mais forte do que ignorá-lo. Encomendas concentram a receita com ticket de R$ 225, o que torna a operação dependente de datas comemorativas — e é exatamente por isso que o plano de mídia prevê pulsos sazonais na Páscoa, Dia das Mães, Dia dos Namorados e fim de ano.", "f": "As encomendas, que representam cerca de 60% da receita com apenas 28% do volume. O risco é a concentração num canal de ticket alto e demanda sazonal. Por isso o plano de mídia prevê pulsos de alta intensidade exatamente nas datas de maior apelo a presente, e a loja física sustenta a recorrência no dia a dia."}];
+let i = 0;
+let respostas = new Array(Q.length).fill(null);
+
+const card = document.getElementById('card');
+const elN = document.getElementById('n'), elAcc = document.getElementById('acc'), elFill = document.getElementById('fill');
+
+function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function acertos(){ return respostas.reduce((s,r,k)=> s + (r!==null && r===Q[k].c ? 1 : 0), 0); }
+function respondidas(){ return respostas.filter(r=>r!==null).length; }
+
+function render(){
+  const q = Q[i];
+  const marcada = respostas[i];
+  elN.textContent = i+1;
+  elAcc.textContent = acertos();
+  elFill.style.width = (respondidas()/Q.length*100)+'%';
+
+  card.innerHTML =
+    '<span class="tag">'+esc(q.bloco)+'</span>'+
+    '<div class="q">'+esc(q.p)+'</div>'+
+    '<div id="opts">'+ q.o.map((o,k)=>
+      '<button class="opt" data-k="'+k+'"><span class="mk">'+'ABCD'[k]+'</span>'+esc(o)+'</button>').join('') +'</div>'+
+    '<div class="fb" id="fb"></div>'+
+    '<div class="nav">'+
+      '<button class="go ghost" id="prev"'+(i===0?' disabled':'')+'>&larr; Voltar</button>'+
+      '<button class="link" id="restart">Reiniciar</button>'+
+      '<button class="go" id="next">'+(i===Q.length-1?'Ver resultado':'Próxima &rarr;')+'</button>'+
+    '</div>';
+
+  document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => escolher(+b.dataset.k)));
+  document.getElementById('prev').addEventListener('click', () => { if(i>0){ i--; render(); } });
+  document.getElementById('restart').addEventListener('click', reiniciar);
+  document.getElementById('next').addEventListener('click', () => {
+    if(i === Q.length-1) resultado(); else { i++; render(); }
+  });
+
+  if(marcada !== null) mostrarFeedback(marcada);
+  else document.getElementById('next').disabled = true;
+}
+
+function escolher(k){
+  if(respostas[i] !== null) return;
+  respostas[i] = k;
+  elAcc.textContent = acertos();
+  elFill.style.width = (respondidas()/Q.length*100)+'%';
+  mostrarFeedback(k);
+}
+
+function mostrarFeedback(k){
+  const q = Q[i], certo = k === q.c;
+  document.querySelectorAll('.opt').forEach(b=>{
+    const kk = +b.dataset.k;
+    b.disabled = true;
+    if(kk === q.c) b.classList.add('ok');
+    else if(kk === k) b.classList.add('no');
+  });
+  const fb = document.getElementById('fb');
+  fb.className = 'fb show ' + (certo ? 'good' : 'bad');
+  fb.innerHTML =
+    '<h4>'+(certo ? '✓ Certo' : '✕ Errado — a resposta é a letra '+'ABCD'[q.c])+'</h4>'+
+    (certo ? '' : '<div>Você marcou <b>'+'ABCD'[k]+'</b>. '+esc(q.o[k])+'</div>')+
+    '<span class="lbl">Por quê</span>'+esc(q.e)+
+    '<span class="lbl">Como responder em voz alta</span>'+esc(q.f);
+  document.getElementById('next').disabled = false;
+}
+
+function reiniciar(){
+  if(respondidas() > 0 && !confirm('Reiniciar o simulado? Suas respostas serão apagadas.')) return;
+  i = 0;
+  respostas = new Array(Q.length).fill(null);
+  document.getElementById('bar').style.display = 'flex';
+  render();
+}
+
+function resultado(){
+  const total = Q.length, ac = acertos(), feitas = respondidas();
+  const pct = Math.round(ac/total*100);
+  document.getElementById('bar').style.display = 'none';
+
+  const porBloco = {};
+  Q.forEach((q,k)=>{
+    porBloco[q.bloco] = porBloco[q.bloco] || {t:0,a:0};
+    porBloco[q.bloco].t++;
+    if(respostas[k] !== null && respostas[k] === q.c) porBloco[q.bloco].a++;
+  });
+
+  let diag;
+  if(pct >= 85) diag = 'Você domina o trabalho. Nesse nível a banca não te pega por conteúdo — foque em respirar, falar devagar e não atropelar os números.';
+  else if(pct >= 70) diag = 'Base sólida, com buracos pontuais. Releia só os blocos em que você errou e refaça o simulado antes de dormir.';
+  else if(pct >= 50) diag = 'Metade do caminho. Vale reler a cola de banca inteira hoje e refazer o simulado até passar de 80%. Priorize o bloco com menos acertos.';
+  else diag = 'Ainda está frágil. Leia a cola de banca com calma, bloco por bloco, e refaça. Não tente decorar tudo: entenda a lógica de cada número, porque a banca pergunta o porquê, não o valor.';
+
+  let blocosHTML = '';
+  for(const b in porBloco){
+    const o = porBloco[b];
+    blocosHTML += '<div class="brow"><span>'+esc(b)+'</span><b>'+o.a+' / '+o.t+'</b></div>';
+  }
+
+  const erradas = [];
+  Q.forEach((q,k)=>{ if(respostas[k] !== null && respostas[k] !== q.c) erradas.push(q); });
+  let revHTML = '';
+  if(erradas.length){
+    revHTML = '<div class="rev"><h3>Revise estas ('+erradas.length+')</h3>' +
+      erradas.map(q => '<div class="rv"><div class="qq">'+esc(q.p)+'</div>'+esc(q.f)+'</div>').join('') + '</div>';
+  }
+  const pendHTML = feitas < total
+    ? '<div class="pend">Você deixou '+(total-feitas)+' questão(ões) em branco. Use o botão Voltar às questões para completar.</div>'
+    : '';
+
+  card.innerHTML =
+    '<div class="res"><div class="score">'+pct+'<span>%</span></div>'+
+    '<p style="margin-top:6px;color:#8a7a68">'+ac+' de '+total+' corretas'+(feitas<total?' · '+feitas+' respondidas':'')+'</p>'+
+    '<div class="diag">'+diag+'</div>'+
+    '<div class="blocos">'+blocosHTML+'</div>'+ pendHTML + revHTML +
+    '<div class="nav" style="justify-content:center;flex-wrap:wrap">'+
+      '<button class="go ghost" id="back">&larr; Voltar às questões</button>'+
+      '<button class="go" id="again">Refazer o simulado</button>'+
+    '</div></div>';
+
+  document.getElementById('back').addEventListener('click', ()=>{
+    document.getElementById('bar').style.display = 'flex';
+    render();
+  });
+  document.getElementById('again').addEventListener('click', ()=>{
+    i = 0;
+    respostas = new Array(Q.length).fill(null);
+    document.getElementById('bar').style.display = 'flex';
+    render();
+  });
+}
+render();
+</script>
+</body></html>
